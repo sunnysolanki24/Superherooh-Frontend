@@ -60,7 +60,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .get("http://65.2.6.168/partners")
+      .get("https://65.2.6.168/partners")
       .then((response) => {
         console.log("DataPartner---", response.data);
         setPartnersData(response.data);
