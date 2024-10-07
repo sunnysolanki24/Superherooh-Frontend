@@ -375,7 +375,7 @@ function Dashboard() {
         ) : (
           <Suspense fallback={<Loading />}>
             <>
-              <div className="mx-auto w-full flex flex-row gap-6 align-middle p-6 bg-purple-100 rounded-md">
+              <div className="mx-auto w-full flex flex-wrap flex-row gap-6 align-middle p-6 bg-purple-100 rounded-md">
                 <p className="text-lg align-middle font-medium">Filters :</p>
                 <DataTableFacetedFilter
                   title="Verified Status"
