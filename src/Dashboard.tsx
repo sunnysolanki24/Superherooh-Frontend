@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { Search } from "lucide-react";
-import axios from "axios";
+//import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom"; // Assuming you're using react-router-dom
 import superhero from "@/assets/superhero.svg";
