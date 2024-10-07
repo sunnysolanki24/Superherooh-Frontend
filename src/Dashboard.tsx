@@ -56,23 +56,228 @@ function Dashboard() {
     [],
   );
   const [loading, setLoading] = useState(true);
-  const [temerror, setError] = useState(null);
+  //const [temerror, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("https://65.2.6.168/partners")
-      .then((response) => {
-        console.log("DataPartner---", response.data);
-        setPartnersData(response.data);
-        setFilteredPartners(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log("Error", temerror);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // axios
+    //   //.get("65.2.6.168/partners")
+    //   .get("https://breadbutterandmagic.com/partners")
+    //   .then((response) => {
+    //     console.log("DataPartner---", response.data);
+    //     setPartnersData(response.data);
+    //     setFilteredPartners(response.data);
+    //   })
+    //   .catch((error) => {
+    //     setError(error.message);
+    //     console.log("Error", temerror);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
+
+    const arr: IPartner[] = [
+      {
+        partner_id: 5,
+        partner_name: "Elonex",
+        description: "A partner offering various services.",
+        services: "Consulting, Development",
+        country: "USA",
+        state_province: "California",
+        city_dma: "Los Angeles",
+        formats: "Digital, Print",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "John Doe",
+            contact_email: "johndoe@example.com",
+            contact_phone: "+1-555-555-5555",
+          },
+        ],
+        websites: [
+          {
+            website_url: "http://www.example.com",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 4,
+        partner_name: "Global Advertsising",
+        description: "A partner offering various services.",
+        services: "Consulting, Development",
+        country: "USA",
+        state_province: "California",
+        city_dma: "Los Angeles",
+        formats: "Digital, Print",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "John Doe",
+            contact_email: "johndoe@example.com",
+            contact_phone: "+1-555-555-5555",
+          },
+        ],
+        websites: [
+          {
+            website_url: "http://www.example.com",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 6,
+        partner_name: "ElonexNew",
+        description: "A partner offering various services.",
+        services: "Consulting, Development",
+        country: "USA",
+        state_province: "California",
+        city_dma: "Los Angeles",
+        formats: "Digital, Print",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "John Doe",
+            contact_email: "johndoe@example.com",
+            contact_phone: "+1-555-555-5555",
+          },
+        ],
+        websites: [
+          {
+            website_url: "http://www.example.com",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 2,
+        partner_name: "Orange Barrel Media",
+        description:
+          "Since our founding in 2004, Orange Barrel Media has been creating value for advertisers, municipal clients, and the cities they serve by designing and operating iconic out-of-home media that adds to the character of urban places. We pioneer landmark media and smart city technology to improve lives in cities.",
+        services: "Media Company",
+        country: "US",
+        state_province: "OH",
+        city_dma: "Columbus",
+        formats:
+          "Static Wallscape, Wallscape, Painted Wallscape, Bulletin, Digital Bulletin, Interactive Digital Kiosks Experience Kiosk",
+        addresses: [
+          {
+            address_country: "US",
+            address_state: "OH",
+            address_street: "250 N. Hartford Avenue",
+            address_city: "Columbus",
+            address_zip_code: "43222",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "Mike Knoll",
+            contact_email: "mknoll@orangebarrelmedia.com",
+            contact_phone: "(330) 612-4748",
+          },
+        ],
+        websites: [
+          {
+            website_url: "https://orangebarrelmedia.com/",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 7,
+        partner_name: "JC Decaux",
+        description:
+          "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
+        services: "Media Company, Agency",
+        country: "USA",
+        state_province: "California",
+        city_dma: "Los Angeles",
+        formats:
+          "street furniture, transport advertising and billboard advertising",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
+            contact_email: "johndoe@example.com",
+            contact_phone: "+1-555-555-5555",
+          },
+        ],
+        websites: [
+          {
+            website_url: "https://www.jcdecaux.com/fr",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 8,
+        partner_name: "JC Decaux",
+        description:
+          "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
+        services: "Media Company, Agency",
+        country: "USA",
+        state_province: "California",
+        city_dma: "Los Angeles",
+        formats:
+          "street furniture, transport advertising and billboard advertising",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
+            contact_email: "johndoe@example.com",
+            contact_phone: "+1-555-555-5555",
+          },
+        ],
+        websites: [
+          {
+            website_url: "https://www.jcdecaux.com/fr",
+            verified: true,
+          },
+        ],
+      },
+    ];
+    setLoading(false);
+    setPartnersData(arr);
+    setFilteredPartners(arr);
   }, []);
 
   // Mimic column filter functionality
