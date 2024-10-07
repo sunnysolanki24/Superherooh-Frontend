@@ -56,25 +56,8 @@ function Dashboard() {
     [],
   );
   const [loading, setLoading] = useState(true);
-  //const [temerror, setError] = useState(null);
 
   useEffect(() => {
-    // axios
-    //   //.get("65.2.6.168/partners")
-    //   .get("https://breadbutterandmagic.com/partners")
-    //   .then((response) => {
-    //     console.log("DataPartner---", response.data);
-    //     setPartnersData(response.data);
-    //     setFilteredPartners(response.data);
-    //   })
-    //   .catch((error) => {
-    //     setError(error.message);
-    //     console.log("Error", temerror);
-    //   })
-    //   .finally(() => {
-    //     setLoading(false);
-    //   });
-
     const arr: IPartner[] = [
       {
         partner_id: 5,
