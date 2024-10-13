@@ -8,20 +8,13 @@ import { IPartner } from "@/lib/utils";
 export function PartnerCard(partnerObject: IPartner) {
   const {
     partner_name,
-    addresses,
+    country,
     description,
     city_dma,
     formats,
     services,
     websites,
   } = partnerObject;
-
-  const formattedAddresses =
-    addresses?.length > 0
-      ? addresses.map((address) => {
-          return `${address.address_street}, ${address.address_city}, ${address.address_state}, ${address.address_zip_code}, ${address.address_country}`;
-        })
-      : "NA";
 
   const verifiedStatus =
     websites?.length > 0
@@ -30,26 +23,31 @@ export function PartnerCard(partnerObject: IPartner) {
         })
       : "NA";
 
+  // Helper function to get initials from partner name
+  const getInitials = (name: string) => {
+    const nameParts = name.split(" ");
+    const initials = nameParts
+      .map((part) => part[0])
+      .slice(0, 2) // limit to 2 characters for initials
+      .join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <Card>
       <CardContent className="flex gap-4 p-4">
-        {/* Image container */}
-        <div className="h-48 w-48 rounded-md border border-gray-200">
-          <img
-            className="h-full w-full rounded-md object-contain"
-            alt="Image placeholder"
-            src={ooh}
-          />
+        {/* Initials container */}
+        <div className="h-48 w-48 rounded-md border border-gray-200 bg-slate-100 flex items-center justify-center">
+          <span className="text-6xl font-bold text-purple-800">
+            {getInitials(partner_name)}
+          </span>
         </div>
 
         {/* Flex container for the text content */}
         <div className="flex flex-col justify-start flex-1">
-          <h3 className="text-xl font-bold text-amber-600 dark:text-white">
+          <h3 className="text-xl font-bold text-amber-600 dark:text-white pb-2">
             {partner_name}
           </h3>
-          <p className="mt-2 italic mb-2 text-gray-900 font-semibold dark:text-neutral-600">
-            {formattedAddresses[0]}
-          </p>
           <p className="text-gray-500 dark:text-neutral-400 line-clamp-6">
             {description}
           </p>
@@ -74,7 +72,13 @@ export function PartnerCard(partnerObject: IPartner) {
           </div>
           <div className="flex flex-col">
             <p className="mt-1 text-gray-900 font-semibold dark:text-neutral-600">
-              DMA :
+              Country :
+            </p>
+            <p className=" text-gray-500 dark:text-neutral-400">{country}</p>
+          </div>
+          <div className="flex flex-col">
+            <p className="mt-1 text-gray-900 font-semibold dark:text-neutral-600">
+              DMA / City :
             </p>
             <p className=" text-gray-500 dark:text-neutral-400">{city_dma}</p>
           </div>

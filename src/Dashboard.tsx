@@ -48,6 +48,16 @@ const formatFilterOptions = [
   { label: "Transit Shelter", value: "transit_shelter" },
 ];
 
+const filterDMAsOptions = [
+  { label: "Los Angeles", value: "Los Angeles" },
+  { label: "Columbus", value: "Columbus" },
+  { label: "New York", value: "New York" },
+  { label: "Hyderabad", value: "Hyderabad" },
+  { label: "Bangalore", value: "Bangalore" },
+  { label: "Chennai", value: "Chennai" },
+  { label: "Mumbai", value: "Mumbai" },
+];
+
 function Dashboard() {
   const [partnersData, setPartnersData] = useState<IPartner[]>([]);
   const [filteredPartners, setFilteredPartners] = useState<IPartner[]>([]);
@@ -257,6 +267,74 @@ function Dashboard() {
           },
         ],
       },
+      {
+        partner_id: 9,
+        partner_name: "Clear Channel Outdoor",
+        description:
+          "At Clear Channel Outdoor, we’re always ready to partner with our customers to successfully navigate the uncertainty of challenging times. From our digital products to our data solutions to our marketing and creative teams to our programmatic opportunities, our unparalleled resources are road-tested and deliver value to our customers that keep businesses moving forward",
+        services: "Media Company",
+        country: "USA",
+        state_province: "NY",
+        city_dma: "New York",
+        formats:
+          "Transit, Train Station Domination, Billboard, Bus Shelters, Urban Panels, Airport",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "Megan Fowkes",
+            contact_email: "meganfowkes@clearchannel.com",
+            contact_phone: "(603) 845-6727",
+          },
+        ],
+        websites: [
+          {
+            website_url: "https://clearchanneloutdoor.com/",
+            verified: true,
+          },
+        ],
+      },
+      {
+        partner_id: 13,
+        partner_name: "Media Transports ",
+        description:
+          "Mediatransports is a major player in transit advertising in France, responsible for advertising in public transportation systems like the RATP (Paris Metro) and SNCF (national railway). They focus on innovative and eco-friendly advertising solutions in urban transit environments​",
+        services: "Media Company, Agency",
+        country: "France",
+        state_province: "",
+        city_dma: "",
+        formats: "Railway",
+        addresses: [
+          {
+            address_country: "USA",
+            address_state: "California",
+            address_street: "123 Main St",
+            address_city: "Los Angeles",
+            address_zip_code: "90001",
+          },
+        ],
+        contacts: [
+          {
+            contact_name: "Nicolas Tabone,Claire Bouvier,Laetitia Beny",
+            contact_email:
+              "nicolas.tabone@mediatransports.com,claire.bouvier@mediatransports.com,laetitia.beny@mediatransports.com,",
+            contact_phone: "33 6 08 58 16 37",
+          },
+        ],
+        websites: [
+          {
+            website_url: "mediatransports.com",
+            verified: true,
+          },
+        ],
+      },
     ];
     setLoading(false);
     setPartnersData(arr);
@@ -320,15 +398,56 @@ function Dashboard() {
     },
   };
 
-  const onSearchResults = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const tempValue = event.target.value; // Get the input value from the event
-    if (tempValue) {
-      // Apply filter logic
-      const filtered = partnersData?.filter((partner) => {
-        const partName = partner.partner_name.toLowerCase(); // Convert partner formats to lowercase for comparison
+  const columnDMAsCities = {
+    getFilterValue: () => selectedFilterFormats,
+    setFilterValue: (value: string[] | undefined) => {
+      if (value) {
+        setSelectedFilterFormats(value);
 
-        // Check if the input value is included in the partner name
-        return partName.includes(tempValue.toLowerCase());
+        // Apply filter logic
+        const filtered = partnersData?.filter((partner) => {
+          const partFormat = partner.city_dma.toLowerCase(); // Convert partner formats to lowercase for comparison
+
+          // Check if any of the selected filter values are included in partner formats
+          return value.some((dma) => partFormat.includes(dma.toLowerCase()));
+        });
+
+        setFilteredPartners(filtered);
+      } else {
+        setFilteredPartners(partnersData); // Reset to original data if no filter
+      }
+    },
+    getFacetedUniqueValues: () => {
+      // Mimicking faceted values based on the "verified" status
+      return new Map([
+        ["true", partnersData.filter((p) => p.city_dma).length],
+        ["false", partnersData.filter((p) => !p.city_dma).length],
+      ]);
+    },
+  };
+
+  const onSearchResults = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const tempValue = event.target.value.toLowerCase(); // Get the input value and convert to lowercase
+    if (tempValue) {
+      const filtered = partnersData?.filter((partner) => {
+        // Check all fields for a match
+        return (
+          partner.partner_name.toLowerCase().includes(tempValue) ||
+          partner.description.toLowerCase().includes(tempValue) ||
+          partner.services.toLowerCase().includes(tempValue) ||
+          partner.country.toLowerCase().includes(tempValue) ||
+          partner.state_province.toLowerCase().includes(tempValue) ||
+          partner.city_dma.toLowerCase().includes(tempValue) ||
+          partner.formats.toLowerCase().includes(tempValue) ||
+          partner.contacts.some((contact) =>
+            Object.values(contact).some((field) =>
+              field.toLowerCase().includes(tempValue),
+            ),
+          ) ||
+          partner.websites.some((website) =>
+            website.website_url.toLowerCase().includes(tempValue),
+          )
+        );
       });
 
       setFilteredPartners(filtered);
@@ -355,7 +474,9 @@ function Dashboard() {
       </header>
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         <div className="mx-auto w-full flex">
-          <h1 className="text-3xl font-semibold">Directories</h1>
+          <h1 className="text-3xl w-fit text-nowrap font-semibold">
+            Global OOH Directory
+          </h1>
           <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <form className="ml-auto flex-1 sm:flex-initial">
               <div className="relative">
@@ -378,7 +499,7 @@ function Dashboard() {
               <div className="mx-auto w-full flex flex-wrap flex-row gap-6 align-middle p-6 bg-purple-100 rounded-md">
                 <p className="text-lg align-middle font-medium">Filters :</p>
                 <DataTableFacetedFilter
-                  title="Verified Status"
+                  title="Category"
                   column={column}
                   options={filterOptions}
                 />
@@ -386,6 +507,11 @@ function Dashboard() {
                   title="Operating Formats"
                   column={columnFormats}
                   options={formatFilterOptions}
+                />
+                <DataTableFacetedFilter
+                  title="Operating DMAs/Cities"
+                  column={columnDMAsCities}
+                  options={filterDMAsOptions}
                 />
               </div>
               <div className="mx-auto grid w-full">
