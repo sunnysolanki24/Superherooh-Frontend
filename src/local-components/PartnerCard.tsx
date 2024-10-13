@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 //import billboard3 from "@/assets/billboard3.svg";
-import ooh from "@/assets/ooh.png";
+//import ooh from "@/assets/ooh.png";
 //import WNDWlogo from "@/assets/WNDWlogo.jpg";
 import { IPartner } from "@/lib/utils";
 
