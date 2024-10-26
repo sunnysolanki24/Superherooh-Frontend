@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { Search } from "lucide-react";
-//import axios from "axios";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom"; // Assuming you're using react-router-dom
 import superhero from "@/assets/superhero.svg";
@@ -66,280 +66,297 @@ function Dashboard() {
     [],
   );
   const [loading, setLoading] = useState(true);
+  const [temerror, setError] = useState(null);
 
   useEffect(() => {
-    const arr: IPartner[] = [
-      {
-        partner_id: 5,
-        partner_name: "Elonex",
-        description: "A partner offering various services.",
-        services: "Consulting, Development",
-        country: "USA",
-        state_province: "California",
-        city_dma: "Los Angeles",
-        formats: "Digital, Print",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "John Doe",
-            contact_email: "johndoe@example.com",
-            contact_phone: "+1-555-555-5555",
-          },
-        ],
-        websites: [
-          {
-            website_url: "http://www.example.com",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 4,
-        partner_name: "Global Advertsising",
-        description: "A partner offering various services.",
-        services: "Consulting, Development",
-        country: "USA",
-        state_province: "California",
-        city_dma: "Los Angeles",
-        formats: "Digital, Print",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "John Doe",
-            contact_email: "johndoe@example.com",
-            contact_phone: "+1-555-555-5555",
-          },
-        ],
-        websites: [
-          {
-            website_url: "http://www.example.com",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 6,
-        partner_name: "ElonexNew",
-        description: "A partner offering various services.",
-        services: "Consulting, Development",
-        country: "USA",
-        state_province: "California",
-        city_dma: "Los Angeles",
-        formats: "Digital, Print",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "John Doe",
-            contact_email: "johndoe@example.com",
-            contact_phone: "+1-555-555-5555",
-          },
-        ],
-        websites: [
-          {
-            website_url: "http://www.example.com",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 2,
-        partner_name: "Orange Barrel Media",
-        description:
-          "Since our founding in 2004, Orange Barrel Media has been creating value for advertisers, municipal clients, and the cities they serve by designing and operating iconic out-of-home media that adds to the character of urban places. We pioneer landmark media and smart city technology to improve lives in cities.",
-        services: "Media Company",
-        country: "US",
-        state_province: "OH",
-        city_dma: "Columbus",
-        formats:
-          "Static Wallscape, Wallscape, Painted Wallscape, Bulletin, Digital Bulletin, Interactive Digital Kiosks Experience Kiosk",
-        addresses: [
-          {
-            address_country: "US",
-            address_state: "OH",
-            address_street: "250 N. Hartford Avenue",
-            address_city: "Columbus",
-            address_zip_code: "43222",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "Mike Knoll",
-            contact_email: "mknoll@orangebarrelmedia.com",
-            contact_phone: "(330) 612-4748",
-          },
-        ],
-        websites: [
-          {
-            website_url: "https://orangebarrelmedia.com/",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 7,
-        partner_name: "JC Decaux",
-        description:
-          "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
-        services: "Media Company, Agency",
-        country: "USA",
-        state_province: "California",
-        city_dma: "Los Angeles",
-        formats:
-          "street furniture, transport advertising and billboard advertising",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
-            contact_email: "johndoe@example.com",
-            contact_phone: "+1-555-555-5555",
-          },
-        ],
-        websites: [
-          {
-            website_url: "https://www.jcdecaux.com/fr",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 8,
-        partner_name: "JC Decaux",
-        description:
-          "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
-        services: "Media Company, Agency",
-        country: "USA",
-        state_province: "California",
-        city_dma: "Los Angeles",
-        formats:
-          "street furniture, transport advertising and billboard advertising",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
-            contact_email: "johndoe@example.com",
-            contact_phone: "+1-555-555-5555",
-          },
-        ],
-        websites: [
-          {
-            website_url: "https://www.jcdecaux.com/fr",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 9,
-        partner_name: "Clear Channel Outdoor",
-        description:
-          "At Clear Channel Outdoor, we’re always ready to partner with our customers to successfully navigate the uncertainty of challenging times. From our digital products to our data solutions to our marketing and creative teams to our programmatic opportunities, our unparalleled resources are road-tested and deliver value to our customers that keep businesses moving forward",
-        services: "Media Company",
-        country: "USA",
-        state_province: "NY",
-        city_dma: "New York",
-        formats:
-          "Transit, Train Station Domination, Billboard, Bus Shelters, Urban Panels, Airport",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "Megan Fowkes",
-            contact_email: "meganfowkes@clearchannel.com",
-            contact_phone: "(603) 845-6727",
-          },
-        ],
-        websites: [
-          {
-            website_url: "https://clearchanneloutdoor.com/",
-            verified: true,
-          },
-        ],
-      },
-      {
-        partner_id: 13,
-        partner_name: "Media Transports ",
-        description:
-          "Mediatransports is a major player in transit advertising in France, responsible for advertising in public transportation systems like the RATP (Paris Metro) and SNCF (national railway). They focus on innovative and eco-friendly advertising solutions in urban transit environments​",
-        services: "Media Company, Agency",
-        country: "France",
-        state_province: "",
-        city_dma: "",
-        formats: "Railway",
-        addresses: [
-          {
-            address_country: "USA",
-            address_state: "California",
-            address_street: "123 Main St",
-            address_city: "Los Angeles",
-            address_zip_code: "90001",
-          },
-        ],
-        contacts: [
-          {
-            contact_name: "Nicolas Tabone,Claire Bouvier,Laetitia Beny",
-            contact_email:
-              "nicolas.tabone@mediatransports.com,claire.bouvier@mediatransports.com,laetitia.beny@mediatransports.com,",
-            contact_phone: "33 6 08 58 16 37",
-          },
-        ],
-        websites: [
-          {
-            website_url: "mediatransports.com",
-            verified: true,
-          },
-        ],
-      },
-    ];
-    setLoading(false);
-    setPartnersData(arr);
-    setFilteredPartners(arr);
-  }, []);
+    // const arr: IPartner[] = [
+    //   {
+    //     partner_id: 5,
+    //     partner_name: "Elonex",
+    //     description: "A partner offering various services.",
+    //     services: "Consulting, Development",
+    //     country: "USA",
+    //     state_province: "California",
+    //     city_dma: "Los Angeles",
+    //     formats: "Digital, Print",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "John Doe",
+    //         contact_email: "johndoe@example.com",
+    //         contact_phone: "+1-555-555-5555",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "http://www.example.com",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 4,
+    //     partner_name: "Global Advertsising",
+    //     description: "A partner offering various services.",
+    //     services: "Consulting, Development",
+    //     country: "USA",
+    //     state_province: "California",
+    //     city_dma: "Los Angeles",
+    //     formats: "Digital, Print",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "John Doe",
+    //         contact_email: "johndoe@example.com",
+    //         contact_phone: "+1-555-555-5555",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "http://www.example.com",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 6,
+    //     partner_name: "ElonexNew",
+    //     description: "A partner offering various services.",
+    //     services: "Consulting, Development",
+    //     country: "USA",
+    //     state_province: "California",
+    //     city_dma: "Los Angeles",
+    //     formats: "Digital, Print",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "John Doe",
+    //         contact_email: "johndoe@example.com",
+    //         contact_phone: "+1-555-555-5555",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "http://www.example.com",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 2,
+    //     partner_name: "Orange Barrel Media",
+    //     description:
+    //       "Since our founding in 2004, Orange Barrel Media has been creating value for advertisers, municipal clients, and the cities they serve by designing and operating iconic out-of-home media that adds to the character of urban places. We pioneer landmark media and smart city technology to improve lives in cities.",
+    //     services: "Media Company",
+    //     country: "US",
+    //     state_province: "OH",
+    //     city_dma: "Columbus",
+    //     formats:
+    //       "Static Wallscape, Wallscape, Painted Wallscape, Bulletin, Digital Bulletin, Interactive Digital Kiosks Experience Kiosk",
+    //     addresses: [
+    //       {
+    //         address_country: "US",
+    //         address_state: "OH",
+    //         address_street: "250 N. Hartford Avenue",
+    //         address_city: "Columbus",
+    //         address_zip_code: "43222",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "Mike Knoll",
+    //         contact_email: "mknoll@orangebarrelmedia.com",
+    //         contact_phone: "(330) 612-4748",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "https://orangebarrelmedia.com/",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 7,
+    //     partner_name: "JC Decaux",
+    //     description:
+    //       "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
+    //     services: "Media Company, Agency",
+    //     country: "USA",
+    //     state_province: "California",
+    //     city_dma: "Los Angeles",
+    //     formats:
+    //       "street furniture, transport advertising and billboard advertising",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
+    //         contact_email: "johndoe@example.com",
+    //         contact_phone: "+1-555-555-5555",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "https://www.jcdecaux.com/fr",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 8,
+    //     partner_name: "JC Decaux",
+    //     description:
+    //       "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
+    //     services: "Media Company, Agency",
+    //     country: "USA",
+    //     state_province: "California",
+    //     city_dma: "Los Angeles",
+    //     formats:
+    //       "street furniture, transport advertising and billboard advertising",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
+    //         contact_email: "johndoe@example.com",
+    //         contact_phone: "+1-555-555-5555",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "https://www.jcdecaux.com/fr",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 9,
+    //     partner_name: "Clear Channel Outdoor",
+    //     description:
+    //       "At Clear Channel Outdoor, we’re always ready to partner with our customers to successfully navigate the uncertainty of challenging times. From our digital products to our data solutions to our marketing and creative teams to our programmatic opportunities, our unparalleled resources are road-tested and deliver value to our customers that keep businesses moving forward",
+    //     services: "Media Company",
+    //     country: "USA",
+    //     state_province: "NY",
+    //     city_dma: "New York",
+    //     formats:
+    //       "Transit, Train Station Domination, Billboard, Bus Shelters, Urban Panels, Airport",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "Megan Fowkes",
+    //         contact_email: "meganfowkes@clearchannel.com",
+    //         contact_phone: "(603) 845-6727",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "https://clearchanneloutdoor.com/",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     partner_id: 13,
+    //     partner_name: "Media Transports ",
+    //     description:
+    //       "Mediatransports is a major player in transit advertising in France, responsible for advertising in public transportation systems like the RATP (Paris Metro) and SNCF (national railway). They focus on innovative and eco-friendly advertising solutions in urban transit environments​",
+    //     services: "Media Company, Agency",
+    //     country: "France",
+    //     state_province: "",
+    //     city_dma: "",
+    //     formats: "Railway",
+    //     addresses: [
+    //       {
+    //         address_country: "USA",
+    //         address_state: "California",
+    //         address_street: "123 Main St",
+    //         address_city: "Los Angeles",
+    //         address_zip_code: "90001",
+    //       },
+    //     ],
+    //     contacts: [
+    //       {
+    //         contact_name: "Nicolas Tabone,Claire Bouvier,Laetitia Beny",
+    //         contact_email:
+    //           "nicolas.tabone@mediatransports.com,claire.bouvier@mediatransports.com,laetitia.beny@mediatransports.com,",
+    //         contact_phone: "33 6 08 58 16 37",
+    //       },
+    //     ],
+    //     websites: [
+    //       {
+    //         website_url: "mediatransports.com",
+    //         verified: true,
+    //       },
+    //     ],
+    //   },
+    // ];
+
+    axios
+      //.get("65.2.6.168/partners")
+      .get("https://breadbutterandmagic.com/partners")
+      .then((response) => {
+        console.log("DataPartner---", response.data);
+        setPartnersData(response.data);
+        setFilteredPartners(response.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log("Error", temerror);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    // setLoading(false);
+    // setPartnersData(arr);
+    // setFilteredPartners(arr);
+  }, [temerror]);
 
   // Mimic column filter functionality
   const column = {
