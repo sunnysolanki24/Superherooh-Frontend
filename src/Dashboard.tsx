@@ -1,17 +1,29 @@
 import { useState, useEffect, Suspense } from "react";
 import { Search } from "lucide-react";
-import axios from "axios";
+//import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom"; // Assuming you're using react-router-dom
 import superhero from "@/assets/superhero.svg";
 //import billboard3 from "@/assets/billboard3.svg";
 //import ooh from "@/assets/ooh.png";
 //import WNDWlogo from "@/assets/WNDWlogo.jpg";
-import { PartnerCard2 } from "@/local-components/PartnerCard2";
+//import { PartnerCard2 } from "@/local-components/PartnerCard2";
 import { PartnerCard } from "@/local-components/PartnerCard";
+import { PartnerSheet } from "./local-components/PartnerSheet";
 import { DataTableFacetedFilter } from "@/local-components/DataTableFacetedFilter";
 import { IPartner } from "@/lib/utils";
 import { Loading } from "@/local-components/Loading";
+import Papa from "papaparse";
+import {
+  Pagination,
+  PaginationContent,
+  //PaginationEllipsis,
+  PaginationItem,
+  //PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import csvFile from "./data/DirectoryMasterSheet.csv";
 
 export const description = "A settings page with a form and navigation links.";
 
@@ -66,297 +78,103 @@ function Dashboard() {
     [],
   );
   const [loading, setLoading] = useState(true);
-  const [temerror, setError] = useState(null);
+  //const [temerror, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentData, setCurrentData] = useState<IPartner[]>([]);
+  const [clickedPartnerObject, setClickedPartnerObject] =
+    useState<IPartner | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const rowsPerPage = 10;
 
   useEffect(() => {
-    // const arr: IPartner[] = [
-    //   {
-    //     partner_id: 5,
-    //     partner_name: "Elonex",
-    //     description: "A partner offering various services.",
-    //     services: "Consulting, Development",
-    //     country: "USA",
-    //     state_province: "California",
-    //     city_dma: "Los Angeles",
-    //     formats: "Digital, Print",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "John Doe",
-    //         contact_email: "johndoe@example.com",
-    //         contact_phone: "+1-555-555-5555",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "http://www.example.com",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 4,
-    //     partner_name: "Global Advertsising",
-    //     description: "A partner offering various services.",
-    //     services: "Consulting, Development",
-    //     country: "USA",
-    //     state_province: "California",
-    //     city_dma: "Los Angeles",
-    //     formats: "Digital, Print",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "John Doe",
-    //         contact_email: "johndoe@example.com",
-    //         contact_phone: "+1-555-555-5555",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "http://www.example.com",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 6,
-    //     partner_name: "ElonexNew",
-    //     description: "A partner offering various services.",
-    //     services: "Consulting, Development",
-    //     country: "USA",
-    //     state_province: "California",
-    //     city_dma: "Los Angeles",
-    //     formats: "Digital, Print",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "John Doe",
-    //         contact_email: "johndoe@example.com",
-    //         contact_phone: "+1-555-555-5555",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "http://www.example.com",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 2,
-    //     partner_name: "Orange Barrel Media",
-    //     description:
-    //       "Since our founding in 2004, Orange Barrel Media has been creating value for advertisers, municipal clients, and the cities they serve by designing and operating iconic out-of-home media that adds to the character of urban places. We pioneer landmark media and smart city technology to improve lives in cities.",
-    //     services: "Media Company",
-    //     country: "US",
-    //     state_province: "OH",
-    //     city_dma: "Columbus",
-    //     formats:
-    //       "Static Wallscape, Wallscape, Painted Wallscape, Bulletin, Digital Bulletin, Interactive Digital Kiosks Experience Kiosk",
-    //     addresses: [
-    //       {
-    //         address_country: "US",
-    //         address_state: "OH",
-    //         address_street: "250 N. Hartford Avenue",
-    //         address_city: "Columbus",
-    //         address_zip_code: "43222",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "Mike Knoll",
-    //         contact_email: "mknoll@orangebarrelmedia.com",
-    //         contact_phone: "(330) 612-4748",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "https://orangebarrelmedia.com/",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 7,
-    //     partner_name: "JC Decaux",
-    //     description:
-    //       "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
-    //     services: "Media Company, Agency",
-    //     country: "USA",
-    //     state_province: "California",
-    //     city_dma: "Los Angeles",
-    //     formats:
-    //       "street furniture, transport advertising and billboard advertising",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
-    //         contact_email: "johndoe@example.com",
-    //         contact_phone: "+1-555-555-5555",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "https://www.jcdecaux.com/fr",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 8,
-    //     partner_name: "JC Decaux",
-    //     description:
-    //       "In 1964, Jean-Claude Decaux invented advertising street furniture. In 2011, JCDecaux became the number one outdoor advertising company worldwide, developing three areas of business: street furniture, transport advertising and billboard advertising.",
-    //     services: "Media Company, Agency",
-    //     country: "USA",
-    //     state_province: "California",
-    //     city_dma: "Los Angeles",
-    //     formats:
-    //       "street furniture, transport advertising and billboard advertising",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "Sophie WITLOX,CORREIA Jean Claude,Manon Vallet",
-    //         contact_email: "johndoe@example.com",
-    //         contact_phone: "+1-555-555-5555",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "https://www.jcdecaux.com/fr",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 9,
-    //     partner_name: "Clear Channel Outdoor",
-    //     description:
-    //       "At Clear Channel Outdoor, we’re always ready to partner with our customers to successfully navigate the uncertainty of challenging times. From our digital products to our data solutions to our marketing and creative teams to our programmatic opportunities, our unparalleled resources are road-tested and deliver value to our customers that keep businesses moving forward",
-    //     services: "Media Company",
-    //     country: "USA",
-    //     state_province: "NY",
-    //     city_dma: "New York",
-    //     formats:
-    //       "Transit, Train Station Domination, Billboard, Bus Shelters, Urban Panels, Airport",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "Megan Fowkes",
-    //         contact_email: "meganfowkes@clearchannel.com",
-    //         contact_phone: "(603) 845-6727",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "https://clearchanneloutdoor.com/",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     partner_id: 13,
-    //     partner_name: "Media Transports ",
-    //     description:
-    //       "Mediatransports is a major player in transit advertising in France, responsible for advertising in public transportation systems like the RATP (Paris Metro) and SNCF (national railway). They focus on innovative and eco-friendly advertising solutions in urban transit environments​",
-    //     services: "Media Company, Agency",
-    //     country: "France",
-    //     state_province: "",
-    //     city_dma: "",
-    //     formats: "Railway",
-    //     addresses: [
-    //       {
-    //         address_country: "USA",
-    //         address_state: "California",
-    //         address_street: "123 Main St",
-    //         address_city: "Los Angeles",
-    //         address_zip_code: "90001",
-    //       },
-    //     ],
-    //     contacts: [
-    //       {
-    //         contact_name: "Nicolas Tabone,Claire Bouvier,Laetitia Beny",
-    //         contact_email:
-    //           "nicolas.tabone@mediatransports.com,claire.bouvier@mediatransports.com,laetitia.beny@mediatransports.com,",
-    //         contact_phone: "33 6 08 58 16 37",
-    //       },
-    //     ],
-    //     websites: [
-    //       {
-    //         website_url: "mediatransports.com",
-    //         verified: true,
-    //       },
-    //     ],
-    //   },
-    // ];
-
-    axios
-      //.get("65.2.6.168/partners")
-      .get("https://breadbutterandmagic.com/partners")
-      .then((response) => {
-        console.log("DataPartner---", response.data);
-        setPartnersData(response.data);
-        setFilteredPartners(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log("Error", temerror);
-      })
-      .finally(() => {
-        setLoading(false);
+    ///TEMp Fix FrontEnd////////////////////////
+    fetch(csvFile)
+      .then((response) => response.text())
+      .then((data) => {
+        Papa.parse(data, {
+          header: true,
+          dynamicTyping: true,
+          complete: (results) => {
+            const formattedData: IPartner[] = results.data.map(
+              (row: any, index) => ({
+                partner_id: index + 1,
+                partner_name: row["Partner Name"] as string, // Adjust based on your CSV headers
+                description: row["Description"] as string,
+                services: row["Services"] as string,
+                country: row["Country"] as string,
+                state_province: row["State/Province"] as string,
+                city_dma: row["City/DMA"] as string,
+                formats: row["OperatingFormats"] as string,
+                addresses: [
+                  {
+                    address_country: row["Address Country"] as string,
+                    address_state: row["Address State"] as string,
+                    address_street: row["Address Street"] as string,
+                    address_city: row["Address City"] as string,
+                    address_zip_code: row["Address Zip Code"] as string,
+                  },
+                ],
+                contacts: [
+                  {
+                    contact_name: row["Contact Name"] as string,
+                    contact_email: row["Contact Email"] as string,
+                    contact_phone: row["Contact Phone"] as string,
+                  },
+                ],
+                websites: [
+                  {
+                    website_url: row["Website"] as string,
+                    verified: row["Verified"] === "true", // Assuming verified is a boolean in the CSV
+                  },
+                ],
+              }),
+            );
+            setPartnersData(formattedData);
+            setFilteredPartners(formattedData);
+            setLoading(false);
+          },
+        });
       });
+
+    //TEMP FIX ENDDDDD////////////////
+
+    ////Closed API Call to be open//////
+    // axios
+    //   //.get("65.2.6.168/partners")
+    //   .get("https://breadbutterandmagic.com/partners")
+    //   .then((response) => {
+    //     console.log("DataPartner---", response.data);
+    //     setPartnersData(response.data);
+    //     setFilteredPartners(response.data);
+    //   })
+    //   .catch((error) => {
+    //     setError(error.message);
+    //     console.log("Error", temerror);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
+    ///Closed api call to open////
+
     // setLoading(false);
     // setPartnersData(arr);
     // setFilteredPartners(arr);
-  }, [temerror]);
+  }, []);
+
+  useEffect(() => {
+    const currentDatatemp = filteredPartners.slice(
+      (currentPage - 1) * rowsPerPage,
+      currentPage * rowsPerPage,
+    );
+
+    setCurrentData(currentDatatemp);
+  }, [filteredPartners, currentPage]);
+
+  const totalPages = Math.ceil(filteredPartners.length / rowsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Mimic column filter functionality
   const column = {
@@ -368,12 +186,14 @@ function Dashboard() {
         // Apply filter logic
         const filtered = partnersData?.filter((partner) => {
           const isVerified = partner.websites[0]?.verified.toString();
-          return value.includes(isVerified);
+          return value?.includes(isVerified);
         });
 
         setFilteredPartners(filtered);
+        setCurrentData(filtered);
       } else {
         setFilteredPartners(partnersData); // Reset to original data if no filter
+        setCurrentData(partnersData);
       }
     },
     getFacetedUniqueValues: () => {
@@ -393,17 +213,19 @@ function Dashboard() {
 
         // Apply filter logic
         const filtered = partnersData?.filter((partner) => {
-          const partFormat = partner.formats.toLowerCase(); // Convert partner formats to lowercase for comparison
+          const partFormat = partner.formats?.toLowerCase(); // Convert partner formats to lowercase for comparison
 
           // Check if any of the selected filter values are included in partner formats
-          return value.some((format) =>
-            partFormat.includes(format.toLowerCase()),
+          return value?.some((format) =>
+            partFormat?.includes(format?.toLowerCase()),
           );
         });
 
         setFilteredPartners(filtered);
+        setCurrentData(filtered);
       } else {
         setFilteredPartners(partnersData); // Reset to original data if no filter
+        setCurrentData(partnersData);
       }
     },
     getFacetedUniqueValues: () => {
@@ -423,15 +245,17 @@ function Dashboard() {
 
         // Apply filter logic
         const filtered = partnersData?.filter((partner) => {
-          const partFormat = partner.city_dma.toLowerCase(); // Convert partner formats to lowercase for comparison
+          const partFormat = partner.city_dma?.toLowerCase(); // Convert partner formats to lowercase for comparison
 
           // Check if any of the selected filter values are included in partner formats
-          return value.some((dma) => partFormat.includes(dma.toLowerCase()));
+          return value.some((dma) => partFormat?.includes(dma.toLowerCase()));
         });
 
         setFilteredPartners(filtered);
+        setCurrentData(filtered);
       } else {
         setFilteredPartners(partnersData); // Reset to original data if no filter
+        setCurrentData(partnersData);
       }
     },
     getFacetedUniqueValues: () => {
@@ -443,34 +267,94 @@ function Dashboard() {
     },
   };
 
+  // useEffect(() => {
+  //   const applyFilters = () => {
+  //     let filtered = partnersData;
+
+  //     // Filter by Verified status
+  //     if (selectedFilter.length > 0) {
+  //       filtered = filtered.filter((partner) => {
+  //         const isVerified = partner.websites[0]?.verified.toString();
+  //         return selectedFilter?.includes(isVerified);
+  //       });
+  //     }
+
+  //     // Filter by Formats
+  //     if (selectedFilterFormats.length > 0) {
+  //       filtered = filtered.filter((partner) => {
+  //         const partFormat = partner.formats?.toLowerCase();
+  //         return selectedFilterFormats.some((format) =>
+  //           partFormat?.includes(format?.toLowerCase()),
+  //         );
+  //       });
+  //     }
+
+  //     // Filter by DMA cities
+  //     if (selectedFilterFormats.length > 0) {
+  //       filtered = filtered.filter((partner) => {
+  //         const partCityDMA = partner.city_dma?.toLowerCase();
+  //         return selectedFilterFormats.some((dma) =>
+  //           partCityDMA?.includes(dma?.toLowerCase()),
+  //         );
+  //       });
+  //     }
+
+  //     setFilteredPartners(filtered);
+  //     setCurrentData(filtered);
+  //   };
+
+  //   applyFilters();
+  // }, [selectedFilter, selectedFilterFormats, partnersData]);
+
   const onSearchResults = (event: React.ChangeEvent<HTMLInputElement>) => {
     const tempValue = event.target.value.toLowerCase(); // Get the input value and convert to lowercase
     if (tempValue) {
       const filtered = partnersData?.filter((partner) => {
         // Check all fields for a match
         return (
-          partner.partner_name.toLowerCase().includes(tempValue) ||
-          partner.description.toLowerCase().includes(tempValue) ||
-          partner.services.toLowerCase().includes(tempValue) ||
-          partner.country.toLowerCase().includes(tempValue) ||
-          partner.state_province.toLowerCase().includes(tempValue) ||
-          partner.city_dma.toLowerCase().includes(tempValue) ||
-          partner.formats.toLowerCase().includes(tempValue) ||
-          partner.contacts.some((contact) =>
-            Object.values(contact).some((field) =>
-              field.toLowerCase().includes(tempValue),
-            ),
-          ) ||
-          partner.websites.some((website) =>
-            website.website_url.toLowerCase().includes(tempValue),
-          )
+          (typeof partner.partner_name === "string" &&
+            partner.partner_name.toLowerCase().includes(tempValue)) ||
+          (typeof partner.description === "string" &&
+            partner.description.toLowerCase().includes(tempValue)) ||
+          (typeof partner.services === "string" &&
+            partner.services.toLowerCase().includes(tempValue)) ||
+          (typeof partner.country === "string" &&
+            partner.country.toLowerCase().includes(tempValue)) ||
+          (typeof partner.state_province === "string" &&
+            partner.state_province.toLowerCase().includes(tempValue)) ||
+          (typeof partner.city_dma === "string" &&
+            partner.city_dma.toLowerCase().includes(tempValue)) ||
+          (typeof partner.formats === "string" &&
+            partner.formats.toLowerCase().includes(tempValue)) ||
+          (Array.isArray(partner.contacts) &&
+            partner.contacts.some((contact) =>
+              Object.values(contact).some(
+                (field) =>
+                  typeof field === "string" &&
+                  field.toLowerCase().includes(tempValue),
+              ),
+            )) ||
+          (Array.isArray(partner.websites) &&
+            partner.websites.some(
+              (website) =>
+                typeof website.website_url === "string" &&
+                website.website_url.toLowerCase().includes(tempValue),
+            ))
         );
       });
 
       setFilteredPartners(filtered);
+      setCurrentData(filtered);
     } else {
       setFilteredPartners(partnersData); // Reset to original data if no filter
+      setCurrentData(partnersData);
+      setCurrentPage(1);
     }
+  };
+
+  const handleCardClick = (partnerObject: IPartner) => {
+    setClickedPartnerObject(partnerObject);
+    setIsSheetOpen(true);
   };
 
   return (
@@ -533,13 +417,75 @@ function Dashboard() {
               </div>
               <div className="mx-auto grid w-full">
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
-                  {filteredPartners.map((partner: IPartner) => (
-                    <PartnerCard key={partner.partner_id} {...partner} />
+                  {currentData.map((partner: IPartner) => (
+                    <PartnerCard
+                      key={partner.partner_id}
+                      partnerObject={partner}
+                      onItemClick={handleCardClick}
+                    />
                   ))}
-                  <PartnerCard2 />
                 </div>
               </div>
+              <Pagination style={{ width: "auto" }}>
+                <PaginationPrevious
+                  onClick={() => {
+                    if (currentPage !== 1)
+                      handlePageChange(Math.max(currentPage - 1, 1));
+                  }}
+                  className={
+                    currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+                  } // Adjust styles based on disabled state
+                >
+                  Previous
+                </PaginationPrevious>
+                <PaginationContent>
+                  {Array.from({ length: totalPages }, (_, index) => {
+                    const pageNum = index + 1;
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                    ) {
+                      return (
+                        <PaginationItem
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`pagination-item ${currentPage === pageNum ? "active" : ""}`}
+                        >
+                          {pageNum}
+                        </PaginationItem>
+                      );
+                    }
+                    if (
+                      pageNum === currentPage - 2 ||
+                      pageNum === currentPage + 2
+                    ) {
+                      return (
+                        <span key={pageNum} className="mx-2">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+                </PaginationContent>
+                <PaginationNext
+                  onClick={() =>
+                    handlePageChange(Math.min(currentPage + 1, totalPages))
+                  }
+                  className={`pagination-next ${currentPage === totalPages ? "disabled" : ""}`}
+                >
+                  Next
+                </PaginationNext>
+              </Pagination>
             </>
+            {clickedPartnerObject && (
+              <PartnerSheet
+                partnerObject={clickedPartnerObject}
+                open={isSheetOpen}
+                onClose={() => setIsSheetOpen(false)}
+              />
+            )}
           </Suspense>
         )}
       </main>

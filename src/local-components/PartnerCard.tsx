@@ -5,7 +5,12 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 //import WNDWlogo from "@/assets/WNDWlogo.jpg";
 import { IPartner } from "@/lib/utils";
 
-export function PartnerCard(partnerObject: IPartner) {
+interface PartnerCardProps {
+  partnerObject: IPartner;
+  onItemClick: (item: IPartner) => void;
+}
+
+export function PartnerCard({ partnerObject, onItemClick }: PartnerCardProps) {
   const {
     partner_name,
     country,
@@ -24,7 +29,9 @@ export function PartnerCard(partnerObject: IPartner) {
       : "NA";
 
   // Helper function to get initials from partner name
-  const getInitials = (name: string) => {
+  const getInitials = (name: string | undefined) => {
+    if (!name) return ""; // Return an empty string or any fallback value
+
     const nameParts = name.split(" ");
     const initials = nameParts
       .map((part) => part[0])
@@ -34,7 +41,7 @@ export function PartnerCard(partnerObject: IPartner) {
   };
 
   return (
-    <Card>
+    <Card onClick={() => onItemClick(partnerObject)}>
       <CardContent className="flex gap-4 p-4">
         {/* Initials container */}
         <div className="h-48 w-48 rounded-md border border-gray-200 bg-slate-100 flex items-center justify-center">
